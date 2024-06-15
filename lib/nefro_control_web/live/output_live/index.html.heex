@@ -1,0 +1,44 @@
+<.header>
+  Listing Outputs
+  <:actions>
+    <.link patch={~p"/outputs/new"}>
+      <.button>New Output</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="outputs"
+  rows={@streams.outputs}
+  row_click={fn {_id, output} -> JS.navigate(~p"/outputs/#{output}") end}
+>
+  <:col :let={{_id, output}} label="Quantity"><%= output.quantity %></:col>
+  <:col :let={{_id, output}} label="Type"><%= output.type %></:col>
+  <:col :let={{_id, output}} label="Comments"><%= output.comments %></:col>
+  <:col :let={{_id, output}} label="Timestamp"><%= output.timestamp %></:col>
+  <:action :let={{_id, output}}>
+    <div class="sr-only">
+      <.link navigate={~p"/outputs/#{output}"}>Show</.link>
+    </div>
+    <.link patch={~p"/outputs/#{output}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, output}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: output.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="output-modal" show on_cancel={JS.patch(~p"/outputs")}>
+  <.live_component
+    module={NefroControlWeb.OutputLive.FormComponent}
+    id={@output.id || :new}
+    title={@page_title}
+    action={@live_action}
+    output={@output}
+    patch={~p"/outputs"}
+  />
+</.modal>

@@ -1,0 +1,43 @@
+<div class={~w(
+    h-dvh dark:text-white
+)}>
+  <%!-- <div id="window" phx-hook="ScreenInfo"></div> --%>
+  <div class="flex gap-3">
+    <.icon_button navigate={~p"/modal/intakes"} src="/images/drink.svg" alt="Hidratación" />
+    <.icon_button navigate={~p"/modal/outputs"} src="/images/piss.svg" alt="Urina" />
+    <.icon_button navigate={~p"/modal/events"} src="/images/event.svg" alt="Evento" />
+  </div>
+  <div>
+    <div class="mt-8 py-4 w-full text-center text-2xl font-bold border-t ">
+      Objetivo diario 3L (<%= "#{@intake_pct}%" %>)
+    </div>
+    <div class="w-full h-6 bg-gray-200 rounded-full dark:bg-gray-700">
+      <div
+        class="h-6 bg-blue-600 rounded-full dark:bg-blue-500 text-white font-bold text-center"
+        style={"width: #{@intake_pct}%"}
+      >
+        <%= "#{@intake_ml}ml" %>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="mt-8 py-4 w-full text-center text-2xl font-bold border-t ">
+      Vaciados (<%= "#{@output_pct}%" %>)
+    </div>
+    <div class="w-full h-6 bg-gray-200 rounded-full dark:bg-gray-700">
+      <div
+        class="h-6 bg-yellow-600 rounded-full dark:bg-yellow-500 text-white font-bold text-center"
+        style={"width: #{@output_pct}%"}
+      >
+        <%= "#{@output_ml}ml" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<.modal :if={@live_action == :intakes} id="intake-home-modal" show on_cancel={JS.patch(~p"/")}>
+  <.live_component id={:new} module={NefroControlWeb.IntakeModal} />
+</.modal>
+<.modal :if={@live_action == :outputs} id="output-home-modal" show on_cancel={JS.patch(~p"/")}>
+  <.live_component id={:new} module={NefroControlWeb.OutputModal} />
+</.modal>
